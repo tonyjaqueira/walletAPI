@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("application-test.properties")
 class WalletApplicationTests {
 
 	@Test
