@@ -1,5 +1,6 @@
 package com.wallet.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import com.wallet.service.UserService;
 @ActiveProfiles("application-test.properties")
 public class UserControllerTest {
 	
+	private static final Long ID = 1L;
 	private static final String EMAIL = "email@teste.com";
 	private static final String USER = "userteste";
 	private static final String PASSWORD = "123456";
@@ -41,28 +43,42 @@ public class UserControllerTest {
 		
 		try {
 			BDDMockito.given(userService.save(Mockito.any(User.class))).willReturn(getMockUser());
-			mvc.perform(MockMvcRequestBuilders.post(URL).content(this.getJsonPayLoad()).contentType(MediaType.APPLICATION_JSON)
+			mvc.perform(MockMvcRequestBuilders.post(URL).content(this.getJsonPayLoad(ID, EMAIL, USER, PASSWORD)).contentType(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON))
-					.andExpect(status().isCreated()); //status 201 isCreated
+					.andExpect(status().isCreated()) //status 201 isCreated
+					.andExpect(jsonPath("$.data.id").value(ID)) //fanedo as vlaidações qu esta sendo retornado da Classe Response que o que estamos setando aqui
+					.andExpect(jsonPath("$.data.email").value(EMAIL))
+					.andExpect(jsonPath("$.data.nome").value(USER))
+					.andExpect(jsonPath("$.data.password").value(PASSWORD));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
+	@Test
+	public void testSaveInvalidUser() throws JsonProcessingException, Exception {
+		mvc.perform(MockMvcRequestBuilders.post(URL).content(this.getJsonPayLoad(ID, "email", USER, PASSWORD)).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest()) 
+				.andExpect(jsonPath("$.errors[0]").value("Email Inválido"));
+	}
+	
 	public User getMockUser() {
 		User u = new User();
+		u.setId(ID);
 		u.setName(USER);
 		u.setPassword(PASSWORD);
 		u.setEmail(EMAIL);
 		return u;
 	}
 	
-	public String getJsonPayLoad() throws JsonProcessingException {
+	public String getJsonPayLoad(Long id, String email, String nome, String password) throws JsonProcessingException {
 		UserDTO dto = new UserDTO();
-		dto.setEmail(EMAIL);
-		dto.setNome(USER);
-		dto.setPassword(PASSWORD);
+		dto.setId(id);
+		dto.setEmail(email);
+		dto.setNome(nome);
+		dto.setPassword(password);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(dto);

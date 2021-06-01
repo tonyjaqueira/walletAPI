@@ -24,15 +24,20 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping()
-	private ResponseEntity<Response<UserDTO>> create(@Valid @RequestBody UserDTO dto, BindingResult result){
+	private ResponseEntity<Response<UserDTO>> create(@Valid @RequestBody UserDTO dto, BindingResult result){ //a anotação @valid faz com que todas as validações declaradas na Entidade UserDTO sejam armazendas na entidade BindingResult
 		Response<UserDTO> response = new Response<UserDTO>();
-		User user = this.userService.save(this.convertDtoToEntity(dto));
+		if(result.hasErrors()) { //verificando se vieram erros no result
+			result.getAllErrors().forEach(errors -> response.getErrors().add(errors.getDefaultMessage()));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+		User user = userService.save(this.convertDtoToEntity(dto));
 		response.setData(this.convertEntityToUserDto(user));
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	private User convertDtoToEntity(UserDTO userDto) {
 		User user = new User();
+		user.setId(userDto.getId());
 		user.setEmail(userDto.getEmail());
 		user.setName(userDto.getNome());
 		user.setPassword(userDto.getPassword());
@@ -41,6 +46,7 @@ public class UserController {
 	
 	private UserDTO convertEntityToUserDto(User user) {
 		UserDTO dto = new UserDTO();
+		dto.setId(user.getId());
 		dto.setEmail(user.getEmail());
 		dto.setNome(user.getName());
 		dto.setPassword(user.getPassword());
