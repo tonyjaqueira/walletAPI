@@ -3,6 +3,9 @@ package com.wallet.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL) //só retorna valores n´~ao nulos no json de respostas
 public class UserDTO {
 
 	private Long id;

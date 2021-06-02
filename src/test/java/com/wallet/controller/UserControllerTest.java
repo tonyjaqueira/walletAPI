@@ -49,7 +49,7 @@ public class UserControllerTest {
 					.andExpect(jsonPath("$.data.id").value(ID)) //fanedo as vlaidações qu esta sendo retornado da Classe Response que o que estamos setando aqui
 					.andExpect(jsonPath("$.data.email").value(EMAIL))
 					.andExpect(jsonPath("$.data.nome").value(USER))
-					.andExpect(jsonPath("$.data.password").value(PASSWORD));
+					.andExpect(jsonPath("$.data.password").doesNotExist()); //para que a senha não seja retonada na resposta
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
