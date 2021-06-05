@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -151,6 +150,14 @@ public class WalletItemRepositoryTeste {
 		List<WalletItem> response = respository.findByWallet_idAndType(savedWalletId, TypeEnum.SD);
 		assertEquals(response.size(), 1);
 		assertEquals(response.get(0).getType(), TypeEnum.SD);
+	}
+	
+	@Test
+	public void testeSumByWallet() {
+		Optional<Wallet> w = walletRepository.findById(savedWalletId);
+		respository.save(new WalletItem(null, w.get(), DATE, TypeEnum.SD, DESCRIPTION, BigDecimal.valueOf(150.80)));
+		BigDecimal response = respository.sumByWalletId(savedWalletId);
+		assertEquals(response.compareTo(BigDecimal.valueOf(215.80)), 0); //215.80 é a soma de 150.80 com a wallet já salva acima de 65, a função compareTo do do Bigdecimal compara dois valores e se forem iagus rertorna "0", se for maio retorna "1" e sew for menor retorna "-1" 
 	}
 }
 

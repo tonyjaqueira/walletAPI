@@ -6,18 +6,21 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class WallateItemDTO {
 	
 	private Long id;
 	@NotNull
 	private Long wallet;
 	@NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", locale = "pt-br", timezone = "Brazil/East")
 	private Date date;
 	@NotNull
 	@Pattern(regexp = "^(ENTRADA|SAIDA)$", message = "Para o tipo somente serão aceitos os valores ENTRADA ou SAÍDA")
 	private String type;
 	@NotNull
-	private String descriotion;
+	private String description;
 	@NotNull
 	private BigDecimal value;
 	
@@ -45,11 +48,11 @@ public class WallateItemDTO {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getDescriotion() {
-		return descriotion;
+	public String getDescription() {
+		return description;
 	}
-	public void setDescriotion(String descriotion) {
-		this.descriotion = descriotion;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public BigDecimal getValue() {
 		return value;
