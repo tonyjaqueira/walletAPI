@@ -13,6 +13,6 @@ import com.wallet.util.enums.TypeEnum;
 public interface WalletItemRepository extends JpaRepository<WalletItem, Long>{
 	
 	Page<WalletItem> findByWalletIdAndDateGreaterThanEqualAndDateLessThanEqual(Long wallet, Date init, Date end, Pageable page);
-	List<WalletItem> findByWalletAndType(Long wallet, TypeEnum type);
+	List<WalletItem> findByWallet_idAndType(Long wallet, TypeEnum type);
 
 }

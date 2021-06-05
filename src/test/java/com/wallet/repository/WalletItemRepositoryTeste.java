@@ -115,6 +115,7 @@ public class WalletItemRepositoryTeste {
 	
 	@Test
 	public void testeFindBetweenDates() {
+		
 		Optional<Wallet> w = walletRepository.findById(savedWalletId);
 		
 		LocalDateTime localDateTime = DATE.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -134,17 +135,20 @@ public class WalletItemRepositoryTeste {
 		assertEquals(response.getContent().get(0).getWallet().getId(), savedWalletId);
 	}
 	
+	@Test
 	public void testFindByType() { //testandpo entradas de carteiras
-		List<WalletItem> response = respository.findByWalletAndType(savedWalletId, TYPE);
+		Wallet w1 = new Wallet();
+		List<WalletItem> response = respository.findByWallet_idAndType(savedWalletId, TYPE);
 		
 		assertEquals(response.size(), 1);
 		assertEquals(response.get(0).getType(), TYPE);
 	}
 	
+	@Test
 	public void testeFindByTypeSd() { //testando saidas de carteiras
 		Optional<Wallet> w = walletRepository.findById(savedWalletId);
 		respository.save(new WalletItem(null, w.get(), DATE, TypeEnum.SD, DESCRIPTION, VALUE));
-		List<WalletItem> response = respository.findByWalletAndType(savedWalletId, TypeEnum.SD);
+		List<WalletItem> response = respository.findByWallet_idAndType(savedWalletId, TypeEnum.SD);
 		assertEquals(response.size(), 1);
 		assertEquals(response.get(0).getType(), TypeEnum.SD);
 	}
