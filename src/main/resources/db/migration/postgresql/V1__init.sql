@@ -22,7 +22,7 @@ foreign key(users) references users(id),
 foreign key(wallet) references wallet(id)
 );
 
-create table walet_items(
+create table wallet_items(
 id serial,
 wallet integer,
 date date,
